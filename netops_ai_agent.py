@@ -5,9 +5,15 @@ from langchain_community.chat_models import ChatOpenAI
 from dotenv import load_dotenv 
 from openai import OpenAI
 import os
+import argparse
 
 load_dotenv(dotenv_path=".env")
 DEEPSEEK_API = os.getenv('DEEPSEEK_API')
+
+parser = argparse.ArgumentParser(description='AI Agent Network Automation')
+parser.add_argument('-q', '--query', type=str, help='entre your query')
+args = parser.parse_args()
+USER_QUERY = args.query
 
 def execute_network_command(command):
     device = {
@@ -37,6 +43,6 @@ llm = ChatOpenAI(model="deepseek-chat" ,api_key=DEEPSEEK_API, base_url="https://
 tools = [network_tool]
 agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
 
-# Example usage
-response = agent.run("Run 'show ipv4  interface brief' on the router, and format the output in json fromat")
+
+response = agent.run(USER_QUERY)
 print(response)
